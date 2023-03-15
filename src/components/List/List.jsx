@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Notify } from 'notiflix';
 import PropTypes from 'prop-types';
 import { BsFillExclamationTriangleFill } from 'react-icons/bs';
 
@@ -35,7 +34,6 @@ export const ListComponent = ({ filter, location }) => {
       } catch (error) {
         setError(true);
         setData([]);
-        Notify.failure('No results found');
       }
     };
     fetchData();
