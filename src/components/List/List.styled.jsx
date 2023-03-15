@@ -73,3 +73,23 @@ export const ItemSpecies = styled.p`
     font-size: 14px;
   }
 `;
+export const ErorrWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+`;
+export const ErrorMessage = styled.p`
+  text-align: center;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.6);
+  @media screen and (min-width: 1440px) {
+    font-size: 30px;
+  }
+`;
