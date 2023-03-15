@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router';
+import { Navigate } from 'react-router';
 
 import { Home } from 'pages/Home/Home';
 import { Details } from 'pages/Details/Details';
@@ -9,6 +10,7 @@ export const App = () => {
         <Route index element={<Home />} />
         <Route path="details/:id" element={<Details />} />
       </Route>
+      <Route path="*" element={<Navigate to="/test-task" />} />
     </Routes>
   );
 };
