@@ -31,6 +31,7 @@ export const ListComponent = ({ filter, location }) => {
           `https://rickandmortyapi.com/api/character/?name=${filter}`
         );
         setData(result.data.results);
+        setError(false);
       } catch (error) {
         setError(true);
         setData([]);
