@@ -36,9 +36,9 @@ export const ListComponent = ({ filter, location }) => {
         <List>
           {data
             .sort((a, b) => {
-              const nameA = a.name.toUpperCase();
-              const nameB = b.name.toUpperCase();
-              return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+              const A = a.name.toUpperCase();
+              const B = b.name.toUpperCase();
+              return A < B ? -1 : A > B ? 1 : 0;
             })
             .map(item => {
               return (
