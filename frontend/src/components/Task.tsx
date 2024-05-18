@@ -4,10 +4,10 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 interface IProps {
- task: { title: string; caption: string; id: string };
+ task: { title: string; caption: string; _id: string };
 }
 const Task: FC<IProps> = ({ task }) => {
- const { title, caption, id } = task;
+ const { title, caption, _id } = task;
  const {
   setNodeRef,
   attributes,
@@ -16,7 +16,7 @@ const Task: FC<IProps> = ({ task }) => {
   transition,
   isDragging,
  } = useSortable({
-  id,
+  id: _id,
   data: {
    type: "task",
    task,

@@ -1,17 +1,20 @@
 import { useFormik } from "formik";
 import { Box, Button, TextField } from "@mui/material";
+import { useAppDispatch } from "../redux/hooks";
+import { fetchBoard } from "../redux/boards/board.contoller";
 
 interface IFormValues {
- uid: string;
+ name: string;
 }
 
 const Form = () => {
  const initialValues: IFormValues = {
-  uid: "",
+  name: "",
  };
+ const dispatch = useAppDispatch();
 
  const onSubmit = (values: IFormValues) => {
-  console.log(values);
+  dispatch(fetchBoard(values.name));
  };
 
  const formik = useFormik({
@@ -37,15 +40,15 @@ const Form = () => {
    >
     <TextField
      fullWidth
-     id="uid"
-     name="uid"
-     label="Enter board uid"
+     id="name"
+     name="name"
+     label="Enter board name"
      required
-     value={formik.values.uid}
+     value={formik.values.name}
      onChange={formik.handleChange}
      onBlur={formik.handleBlur}
-     error={formik.touched.uid && Boolean(formik.errors.uid)}
-     helperText={formik.touched.uid && formik.errors.uid}
+     error={formik.touched.name && Boolean(formik.errors.name)}
+     helperText={formik.touched.name && formik.errors.name}
      sx={{
       width: "450px",
      }}

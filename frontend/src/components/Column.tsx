@@ -1,16 +1,21 @@
 import { Box, Button, Typography } from "@mui/material";
 import Task from "./Task";
-import { FC, useMemo } from "react";
+import { FC, useMemo, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
+import ModalAdd from "./ModalAdd";
 
 interface IProps {
  id: string;
  title: string;
- tasks: { title: string; caption: string; id: string }[];
+ boardId: string;
+ tasks: { title: string; caption: string; _id: string }[];
 }
-const Column: FC<IProps> = ({ id, title, tasks }) => {
- const tasksId = useMemo(() => tasks.map((task) => task.id), [tasks]);
+const Column: FC<IProps> = ({ id, title, tasks, boardId }) => {
+ const tasksId = useMemo(() => tasks.map((task) => task._id), [tasks]);
+ const [open, setOpen] = useState(false);
+ const handleOpen = () => setOpen(true);
+ const handleClose = () => setOpen(false);
  const { setNodeRef, attributes } = useSortable({
   id,
   data: {
@@ -78,9 +83,16 @@ const Column: FC<IProps> = ({ id, title, tasks }) => {
        padding: "10px",
        flexShrink: 0,
       }}
+      onClick={handleOpen}
      >
       <AddIcon />
      </Button>
+     <ModalAdd
+      boardId={boardId}
+      columnId={id}
+      handleClose={handleClose}
+      open={open}
+     />
     </Box>
    </Box>
   </Box>

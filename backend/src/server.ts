@@ -1,7 +1,28 @@
+import cors from "cors";
 import express from "express";
+import dotenv from "dotenv";
+import { taskRouter } from "./routes/tasks.routes";
+import { boardRouter } from "./routes/boards.routes";
+import { connect } from "./config/db";
+import { columnsRouter } from "./routes/columns.routes";
+
 const app = express();
 const PORT = process.env.PORT || 3001;
-app.get("/", (req, res) => res.send("Hello Backend!"));
-app.listen(PORT, () =>
- console.log(`Server running on http://localhost:${PORT}`)
-);
+dotenv.config();
+const corsOptions = {
+ origin: true,
+ credentials: true,
+};
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors(corsOptions));
+
+app.use("/api/boards", boardRouter);
+app.use("/api/columns", columnsRouter);
+app.use("/api/tasks", taskRouter);
+
+app.listen(PORT, async () => {
+ await connect();
+ console.log(`Server is started on port ${PORT}`);
+});
