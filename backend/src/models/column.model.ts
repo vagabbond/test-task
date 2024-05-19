@@ -1,20 +1,26 @@
 import { model, Schema } from "mongoose";
 
-export interface IColumn {
+export interface ITask {
+ [x: string]: any;
  title: string;
- tasks: Schema.Types.ObjectId[];
- board: Schema.Types.ObjectId;
+ caption: string;
 }
 
+export interface IColumn {
+ title: string;
+ tasks: ITask[];
+ board: Schema.Types.ObjectId;
+}
+export const taskSchema = new Schema<ITask>(
+ {
+  title: { type: String, required: true },
+  caption: { type: String, required: true },
+ },
+ { _id: true }
+);
 const columnSchema = new Schema<IColumn>({
  title: { type: String, required: true },
- tasks: [
-  {
-   type: Schema.Types.ObjectId,
-   ref: "Task",
-  },
- ],
-
+ tasks: [taskSchema],
  board: {
   type: Schema.Types.ObjectId,
   ref: "Board",

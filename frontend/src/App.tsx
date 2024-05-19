@@ -1,97 +1,84 @@
 import Form from "./components/Form";
-import { Box, Button, Modal, Typography } from "@mui/material";
-import Board from "./components/Board";
+import { Board } from "./components/Board";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { fetchColumns } from "./redux/columns/columns.controller";
-import { fetchTasks } from "./redux/tasks/tasks.controller";
 import CreateBoardForm from "./components/CreateBoardForm";
-
-const style = {
- position: "absolute",
- top: "50%",
- left: "50%",
- transform: "translate(-50%, -50%)",
- width: 400,
- bgcolor: "background.paper",
- border: "2px solid #000",
- boxShadow: 24,
- p: 4,
-};
+import Error from "./components/Error";
 
 function App() {
  const dispatch = useAppDispatch();
- const board = useAppSelector((state) => state.boards.board);
- const columns = useAppSelector((state) => state.columns.columns);
- const { tasks } = useAppSelector((state) => state.tasks);
-
+ const {
+  board,
+  error: boardError,
+  success: boardSuccess,
+ } = useAppSelector((state) => state.boards);
+ const { error: columnError, success: columnsSuccess } = useAppSelector(
+  (state) => state.columns
+ );
  const [open, setOpen] = useState(false);
- const handleOpen = () => setOpen(true);
- const handleClose = () => setOpen(false);
+ const [notifyInfo, setNotifyInfo] = useState<{
+  message: string;
+  status: "success" | "error" | null;
+  check: boolean;
+  type: "board" | "column" | null;
+ }>({
+  message: "",
+  status: null,
+  check: false,
+  type: null,
+ });
+ const handleClose = () => {
+  setOpen(!open);
+ };
 
  useEffect(() => {
-  if (board) {
-   console.log("fetching columns and tasks");
+  if (board?._id) {
    dispatch(fetchColumns(board._id));
-   dispatch(fetchTasks(board._id));
   }
- }, [dispatch, board]);
+ }, [dispatch, board?._id]);
+ useEffect(() => {
+  setNotifyInfo({
+   message:
+    boardSuccess ||
+    columnsSuccess ||
+    columnError?.message ||
+    boardError?.message ||
+    "",
+   status: boardSuccess || columnsSuccess ? "success" : "error",
+   check:
+    boardSuccess || columnsSuccess || columnError || boardError ? true : false,
+   type: boardSuccess || boardError ? "board" : "column",
+  });
+ }, [boardSuccess, columnsSuccess, columnError, boardError]);
 
  return (
-  <Box
-   sx={{
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 2,
-    padding: "20px",
-   }}
-  >
-   <Box
-    sx={{
-     display: "flex",
-     alignItems: "center",
-     gap: "10px",
-    }}
-   >
+  <div className="h-screen w-full bg-neutral-900 text-neutral-50">
+   <div className="w-full flex align-center justify-center p-4 bg-neutral-800/50 gap-9">
     <Form />
-    <Box>
-     <Button
-      type="button"
-      onClick={handleOpen}
-      color="primary"
-      variant="contained"
-      sx={{
-       height: "56px",
-      }}
-     >
-      Create a new One
-     </Button>
-     <Modal open={open} onClose={handleClose}>
-      <Box sx={style}>
-       <CreateBoardForm handleClose={handleClose} />
-      </Box>
-     </Modal>
-    </Box>
-   </Box>
-
-   {board ? (
-    <Board fetchedColumns={columns} fetchedTasks={tasks} />
-   ) : (
-    <Box
-     sx={{
-      width: "100%",
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-     }}
+    <button
+     onClick={() => setOpen(!open)}
+     className="bg-violet-400 text-neutral-50 rounded p-2 h-10"
     >
-     <Typography variant="h3">Fetch or create a board</Typography>
-    </Box>
+     Create Board
+    </button>
+    {open && <CreateBoardForm handleClose={handleClose} />}
+   </div>
+   {board ? (
+    <Board />
+   ) : (
+    <div className="w-full flex align-center  justify-center mt-10">
+     <p className="">Fetch or create a board</p>
+    </div>
    )}
-  </Box>
+   {notifyInfo.check && (
+    <Error
+     message={notifyInfo.message}
+     status={notifyInfo.status}
+     type={notifyInfo.type}
+    />
+   )}
+  </div>
  );
 }
 

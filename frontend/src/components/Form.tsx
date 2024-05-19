@@ -1,5 +1,4 @@
 import { useFormik } from "formik";
-import { Box, Button, TextField } from "@mui/material";
 import { useAppDispatch } from "../redux/hooks";
 import { fetchBoard } from "../redux/boards/board.contoller";
 
@@ -13,58 +12,31 @@ const Form = () => {
  };
  const dispatch = useAppDispatch();
 
- const onSubmit = (values: IFormValues) => {
-  dispatch(fetchBoard(values.name));
- };
-
  const formik = useFormik({
   initialValues,
-  onSubmit: onSubmit,
+  onSubmit: (values: IFormValues, actions) => {
+   dispatch(fetchBoard(values.name));
+   actions.resetForm();
+  },
  });
 
  return (
-  <Box
-   sx={{
-    display: "flex",
-    justifyContent: "center",
-   }}
-  >
-   <Box
-    component="form"
-    onSubmit={formik.handleSubmit}
-    sx={{
-     display: "flex",
-     width: "100%",
-     gap: 2,
-    }}
-   >
-    <TextField
-     fullWidth
-     id="name"
+  <form onSubmit={formik.handleSubmit} className="flex  gap-2">
+   <div className="flex gap-2 flex-col ">
+    <input
+     type="text"
      name="name"
-     label="Enter board name"
-     required
-     value={formik.values.name}
+     id="name"
      onChange={formik.handleChange}
-     onBlur={formik.handleBlur}
-     error={formik.touched.name && Boolean(formik.errors.name)}
-     helperText={formik.touched.name && formik.errors.name}
-     sx={{
-      width: "450px",
-     }}
+     value={formik.values.name}
+     placeholder="Board name"
+     className="text-black rounded border border-neutral-700 p-2  focus:outline-0"
     />
-    <Button
-     type="submit"
-     color="primary"
-     variant="contained"
-     sx={{
-      width: "150px",
-     }}
-    >
-     Search
-    </Button>
-   </Box>
-  </Box>
+   </div>
+   <button type="submit" className=" bg-violet-400 text-neutral-50 rounded p-2">
+    Fetch
+   </button>
+  </form>
  );
 };
 

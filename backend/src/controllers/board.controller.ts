@@ -60,3 +60,17 @@ export const editBoardName = async (req: Request, res: Response) => {
   return res.status(500).json({ message: "Server error" });
  }
 };
+
+export const deleteBoard = async (req: Request, res: Response) => {
+ try {
+  const { id } = req.params;
+  const board = await Board.findByIdAndDelete(id);
+  if (!board) {
+   return res.status(404).json({ message: "Board not found" });
+  }
+  await Column.deleteMany({ _id: { $in: board.columns } });
+  return res.json({ id });
+ } catch (error) {
+  return res.status(500).json({ message: "Server error" });
+ }
+};
