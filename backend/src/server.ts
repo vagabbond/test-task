@@ -1,7 +1,6 @@
 import cors from "cors";
 import express from "express";
 import dotenv from "dotenv";
-import path from "path";
 import { boardRouter } from "./routes/boards.routes";
 import { connect } from "./config/db";
 import { columnsRouter } from "./routes/columns.routes";
@@ -15,17 +14,12 @@ const corsOptions = {
 };
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 
 app.use("/api/boards", boardRouter);
 app.use("/api/columns", columnsRouter);
 
-app.get("/error", (req, res) => {
- console.log("Error route hit");
- res.status(400).json({ message: "Error route hit" });
-});
 app.listen(PORT, async () => {
  await connect();
  console.log(`Server is started on port ${PORT}`);
