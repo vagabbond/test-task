@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
 import { boardRouter } from "./routes/boards.routes";
 import { connect } from "./config/db";
 import { columnsRouter } from "./routes/columns.routes";
@@ -14,6 +15,7 @@ const corsOptions = {
 };
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 
